@@ -17,20 +17,32 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/server/login', {
-        username,
-        password,
-        role,
-      });
-      alert(`Login successful as ${response.data.message}`);
-      localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
-    } catch (error) {
-      alert(error.response?.data?.message || 'Login failed');
+  e.preventDefault();
+  try {
+    const response = await axios.post('http://localhost:5000/server/login', {
+      username,
+      password,
+      role,
+    });
+
+    const { token, role: userRole } = response.data;
+
+    alert(`Login successful as ${userRole}`);
+    localStorage.setItem('token', token);
+
+    // Navigate based on role
+    if (userRole === 'faculty') {
+      navigate('/faculty');
+    } else if (userRole === 'student') {
+      navigate('/student');
+    } else {
+      alert('Unknown role. Please contact support.');
     }
-  };
+  } catch (error) {
+    alert(error.response?.data?.message || 'Login failed');
+  }
+};
+
 
   return (
     <Container className={`${styles.container} d-flex justify-content-center align-items-center`}>
@@ -44,6 +56,7 @@ const Login = () => {
           className="mb-4 d-flex justify-content-center"
         >
           <ToggleButton
+            id="student"
             className={styles.toggleButton}
             value="student"
             variant={role === 'student' ? 'primary' : 'outline-primary'}
@@ -51,6 +64,7 @@ const Login = () => {
             Student
           </ToggleButton>
           <ToggleButton
+            id="faculty"
             className={styles.toggleButton}
             value="faculty"
             variant={role === 'faculty' ? 'primary' : 'outline-primary'}

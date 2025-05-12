@@ -16,22 +16,28 @@ const Faculty = () => {
   }, []);
 
   const fetchMentorRequests = async () => {
-    try {
-      const response = await axios.get('/server/requests');
-      setRequests(response.data);
-    } catch (error) {
-      console.error('Error fetching mentor requests:', error);
-    }
-  };
+  try {
+    const response = await axios.get('/server/reqmentees');
+    console.log('Mentor request response:', response.data); // Debug line
+    // Ensure response.data is an array
+    setRequests(Array.isArray(response.data) ? response.data : []);
+  } catch (error) {
+    console.error('Error fetching mentor requests:', error);
+    setRequests([]); // Reset on error
+  }
+};
+
 
   const fetchMentees = async () => {
-    try {
-      const response = await axios.get('/server/mentees');
-      setMentees(response.data);
-    } catch (error) {
-      console.error('Error fetching mentees:', error);
-    }
-  };
+  try {
+    const response = await axios.get('/server/getmentees');
+    // Always set mentees as an array
+    setMentees(Array.isArray(response.data) ? response.data : []);
+  } catch (error) {
+    console.error('Error fetching mentees:', error);
+    setMentees([]); // Reset mentees to an empty array on error
+  }
+};
 
   const handleAccept = async (requestId) => {
     try {
@@ -83,22 +89,23 @@ const Faculty = () => {
       </Card>
 
       <Card>
-        <Card.Header className={styles.cardHeader}>My Mentees</Card.Header>
-        <ListGroup variant="flush">
-          {mentees.length === 0 && <ListGroup.Item>No mentees yet.</ListGroup.Item>}
-          {mentees.map((mentee) => (
-            <ListGroup.Item key={mentee.id} className="d-flex justify-content-between align-items-center">
-              <span>{mentee.name}</span>
-              <Button size="sm" variant="info" onClick={() => {
-                setSelectedRequest(mentee);
-                setShowModal(true);
-              }}>
-                Give Feedback
-              </Button>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-      </Card>
+  <Card.Header className={styles.cardHeader}>My Mentees</Card.Header>
+  <ListGroup variant="flush">
+    {Array.isArray(mentees) && mentees.length === 0 && <ListGroup.Item>No mentees yet.</ListGroup.Item>}
+    {Array.isArray(mentees) && mentees.map((mentee) => (
+      <ListGroup.Item key={mentee.id} className="d-flex justify-content-between align-items-center">
+        <span>{mentee.name}</span>
+        <Button size="sm" variant="info" onClick={() => {
+          setSelectedRequest(mentee);
+          setShowModal(true);
+        }}>
+          Give Feedback
+        </Button>
+      </ListGroup.Item>
+    ))}
+  </ListGroup>
+</Card>
+
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton className={styles.modalHeader}>

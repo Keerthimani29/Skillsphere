@@ -9,13 +9,13 @@ router.post('/login', loginuser);
 
 // faculty dashboard
 // GET mentor requests for a faculty
-router.get('/requests/:facultyId', getMentorRequests);
+router.get('/reqmentees/:facultyId', getMentorRequests);
 
 // PATCH accept/reject a request
 router.patch('/requests/:requestId/status', updateRequestStatus);
 
 // GET accepted mentees
-router.get('/mentees/:facultyId', getMentees);
+router.get('/getmentees/:facultyId', getMentees);
 
 // POST feedback
 router.post('/feedback/:requestId', provideFeedback);
