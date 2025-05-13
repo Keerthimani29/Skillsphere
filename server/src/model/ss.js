@@ -30,9 +30,23 @@ const mentorRequestSchema = new mongoose.Schema({
   status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
   feedback: { type: String, default: '' },
 });
-
 const  mentorRequest = mongoose.model('mentorRequest', mentorRequestSchema);
 
+//faculty details
+const facultyProfile = new mongoose.Schema({
+ 
 
-module.exports = { login, mentorRequest };
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  contactNumber: { type: String, required: true },
+  department: { type: String, required: true },
+  designation: { type: String, required: true },
+  domain: { type: String, required: true },
+  qualifications: { type: String, required: true },
+  experience: { type: String, required: true }
+});
+const faculty = mongoose.model('faculty', facultyProfile);
+
+
+module.exports = { login, mentorRequest , faculty};
 
